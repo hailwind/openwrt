@@ -77,6 +77,26 @@ define Device/fsl_ls1012a-rdb
 endef
 TARGET_DEVICES += fsl_ls1012a-rdb
 
+define Device/hclink_en101
+  $(Device/rework-sdcard-images)
+  $(Device/fsl-sdboot)
+  DEVICE_VENDOR := HCLINK
+  DEVICE_MODEL := EN101
+  DEVICE_PACKAGES += \
+    layerscape-ppfe \
+    kmod-ppfe \
+    tfa-ls1012a-rdb \
+    kmod-hwmon-ina2xx \
+    kmod-iio-fxas21002c-i2c
+  DEVICE_DTS := freescale/hclink_en101
+  IMAGE/sdcard.img.gz := \
+    ls-clean | \
+    ls-append-sdhead $(1) | pad-to 16M | \
+    ls-append-kernel | pad-to $(LS_SD_ROOTFSPART_OFFSET)M | \
+    append-rootfs | pad-to $(LS_SD_IMAGE_SIZE)M | gzip
+endef
+TARGET_DEVICES += hclink_en101
+
 define Device/fsl_ls1012a-frwy-sdboot
   $(Device/rework-sdcard-images)
   $(Device/fsl-sdboot)
